@@ -12,7 +12,7 @@ El proyecto implementa reglas de combate, límites de recursos (energía y usos 
 
 ---
 
-## ⚔️ Reglas de Negocio y Dominio
+## Reglas
 
 ### 1. Combatientes
 - **Valores Base**: Cada combatiente inicia con **100 de Vida Máxima** y **100 de Energía Máxima**.
@@ -62,7 +62,7 @@ El proyecto implementa reglas de combate, límites de recursos (energía y usos 
 
 ---
 
-## 🏛️ Conceptos de Diseño Aplicados
+## Generales
 
 - **Herencia y Polimorfismo**:
   - Jerarquía de `Combatiente` y sus especializaciones (`CultivadorDeLaEspada`, `HechiceroDelVacio`, `MonjeDelCuerpoCelestial`).
@@ -78,34 +78,3 @@ El proyecto implementa reglas de combate, límites de recursos (energía y usos 
   - Desacoplamiento total entre las reglas del torneo, la mecánica del combate por asaltos y la presentación en consola.
 
 ---
-
-## 🚀 Compilación y Ejecución
-
-### Prerrequisitos
-- **Java JDK 17** o superior instalado.
-- Opcional: **Eclipse IDE** o **VS Code** con soporte para Java.
-
-### 1. Compilación desde la Terminal
-Para compilar todo el código fuente hacia la carpeta `bin/`:
-
-```powershell
-# En Windows (PowerShell):
-$srcFiles = Get-ChildItem -Path "src" -Filter *.java -Recurse | Select-Object -ExpandProperty FullName
-javac -d bin -cp src $srcFiles
-```
-
-### 2. Ejecutar la Simulación Principal
-Para correr el torneo de ejemplo preconfigurado en `Main`:
-
-```powershell
-java -cp bin Main
-```
-
-### 3. Ejecutar las Pruebas Unitarias
-El proyecto cuenta con **51 pruebas unitarias** que validan la totalidad de las reglas de negocio. En Eclipse o VS Code pueden ejecutarse haciendo clic derecho sobre la carpeta `test/` y seleccionando **Run As -> JUnit Test**.
-
----
-
-## 👥 Materia
-- **Materia**: Paradigmas de Programación
-- **Universidad**: Universidad Nacional de La Matanza (UNLaM)
