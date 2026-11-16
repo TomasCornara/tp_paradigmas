@@ -5,32 +5,16 @@ import tecnicas.Tecnica;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Pareja {
     private final int id;
     private final Combatiente primero;
     private final Combatiente segundo;
 
-    private static class UsoTecnica {
-        private final Tecnica tecnica;
-        private final Combatiente usuario;
-
-        public UsoTecnica(Tecnica tecnica, Combatiente usuario) {
-            this.tecnica = tecnica;
-            this.usuario = usuario;
-        }
-
-        public Tecnica getTecnica() {
-            return tecnica;
-        }
-
-        public Combatiente getUsuario() {
-            return usuario;
-        }
-    }
-
-    private final List<UsoTecnica> registrosUso = new ArrayList<>();
+    private final Map<Tecnica, Combatiente> tecnicaUsadaPor = new HashMap<>();
 
     public Pareja(int id, Combatiente primero, Combatiente segundo) {
         if (id <= 0) {
@@ -69,26 +53,14 @@ public class Pareja {
     }
 
     public void registrarUsoTecnica(Combatiente usuario, Tecnica tecnica) {
-        if (buscarUsuario(tecnica) == null) {
-            registrosUso.add(new UsoTecnica(tecnica, usuario));
+        if (usuario != null && tecnica != null) {
+            tecnicaUsadaPor.putIfAbsent(tecnica, usuario);
         }
-    }
-
-    private Combatiente buscarUsuario(Tecnica tecnica) {
-        for (UsoTecnica reg : registrosUso) {
-            if (reg.getTecnica().equals(tecnica)) {
-                return reg.getUsuario();
-            }
-        }
-        return null;
     }
 
     public boolean puedeUsarPorReglaCompaniero(Combatiente solicitante, Tecnica tecnica) {
-        Combatiente usuarioOriginal = buscarUsuario(tecnica);
-        if (usuarioOriginal == null) {
-            return true;
-        }
-        if (usuarioOriginal.equals(solicitante)) {
+        Combatiente usuarioOriginal = tecnicaUsadaPor.get(tecnica);
+        if (usuarioOriginal == null || usuarioOriginal.equals(solicitante)) {
             return true;
         }
 
@@ -98,7 +70,7 @@ public class Pareja {
     }
 
     public void reiniciarRestriccionesCombate() {
-        registrosUso.clear();
+        tecnicaUsadaPor.clear();
     }
 
     public void restablecerParaNuevoCombate() {

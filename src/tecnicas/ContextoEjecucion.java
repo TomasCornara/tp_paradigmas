@@ -2,6 +2,7 @@ package tecnicas;
 
 import combatientes.Combatiente;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class ContextoEjecucion {
@@ -40,18 +41,11 @@ public class ContextoEjecucion {
     }
 
     public static Combatiente elegirObjetivo(List<Combatiente> rivales) {
-        Combatiente objetivo = null;
-        for (Combatiente c : rivales) {
-            if (c.estaEnPie()) {
-                if (objetivo == null) {
-                    objetivo = c;
-                } else if (c.vidaActual() < objetivo.vidaActual()) {
-                    objetivo = c;
-                } else if (c.vidaActual() == objetivo.vidaActual() && c.id() < objetivo.id()) {
-                    objetivo = c;
-                }
-            }
-        }
-        return objetivo;
+        if (rivales == null) return null;
+        return rivales.stream()
+                .filter(Combatiente::estaEnPie)
+                .min(Comparator.comparingInt(Combatiente::vidaActual)
+                        .thenComparingInt(Combatiente::id))
+                .orElse(null);
     }
 }

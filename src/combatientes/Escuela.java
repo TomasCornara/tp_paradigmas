@@ -24,23 +24,22 @@ public class Escuela {
         if (equipamientos == null) {
             throw new IllegalArgumentException("Los equipamientos no pueden ser nulos");
         }
+        validarKitInicial(equipamientos);
         this.nombre = nombre;
         this.tecnicas = Collections.unmodifiableList(new ArrayList<>(tecnicas));
-        List<Equipamiento> kit = new ArrayList<>(equipamientos);
-        validarKitInicial(kit);
-        this.equipamientos = Collections.unmodifiableList(kit);
+        this.equipamientos = Collections.unmodifiableList(new ArrayList<>(equipamientos));
     }
 
     private static void validarKitInicial(List<Equipamiento> kit) {
         if (kit.size() > Equipamiento.MAX_EQUIPAMIENTOS) {
-            throw new ReglaEquipamientoException("El equipamiento inicial de una escuela admite hasta "
+            throw new ReglaEquipamientoException("El equipamiento inicial admite hasta "
                     + Equipamiento.MAX_EQUIPAMIENTOS + " objetos");
         }
         List<CategoriaEquipamiento> categorias = new ArrayList<>();
         for (Equipamiento eq : kit) {
             if (categorias.contains(eq.categoria())) {
                 throw new ReglaEquipamientoException(
-                        "El equipamiento inicial de una escuela no puede repetir la categoría " + eq.categoria());
+                        "El equipamiento inicial no puede repetir la categoría " + eq.categoria());
             }
             categorias.add(eq.categoria());
         }

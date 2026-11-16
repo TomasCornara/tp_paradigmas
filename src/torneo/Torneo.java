@@ -7,11 +7,15 @@ import combatientes.Combatiente;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class Torneo {
     private final List<Pareja> parejas = new ArrayList<>();
+    private final Set<Pareja> parejasInscriptas = new HashSet<>();
+    private final Set<Combatiente> combatientesInscriptos = new HashSet<>();
     private final EmisorAcontecimientos emisor = new EmisorAcontecimientos();
     private int siguienteIdPareja = 1;
 
@@ -20,10 +24,20 @@ public class Torneo {
     }
 
     public Pareja inscribir(Combatiente primero, Combatiente segundo) {
+        while (contieneIdPareja(siguienteIdPareja)) {
+            siguienteIdPareja++;
+        }
         Pareja pareja = new Pareja(siguienteIdPareja, primero, segundo);
         inscribir(pareja);
         siguienteIdPareja++;
         return pareja;
+    }
+
+    private boolean contieneIdPareja(int id) {
+        for (Pareja p : parejas) {
+            if (p.id() == id) return true;
+        }
+        return false;
     }
 
     public void inscribir(Pareja pareja) {
@@ -33,27 +47,20 @@ public class Torneo {
         if (parejas.size() >= 8) {
             throw new IllegalStateException("El torneo admite como máximo 8 parejas");
         }
-
-        if (parejas.contains(pareja)) {
+        if (!parejasInscriptas.add(pareja)) {
             throw new IllegalArgumentException("La pareja #" + pareja.id() + " ya se encuentra registrada en el torneo");
         }
-
-        for (Pareja inscripta : parejas) {
-            for (Combatiente c : pareja.combatientes()) {
-                if (inscripta.combatientes().contains(c)) {
-                    throw new IllegalArgumentException("El combatiente " + c.nombre() + " ya está inscripto en otra pareja");
-                }
+        for (Combatiente c : pareja.combatientes()) {
+            if (!combatientesInscriptos.add(c)) {
+                parejasInscriptas.remove(pareja);
+                throw new IllegalArgumentException("El combatiente " + c.nombre() + " ya está inscripto en otra pareja");
             }
         }
-
         parejas.add(pareja);
     }
 
     public Pareja iniciar() {
-        return iniciar(new Consumer<List<Pareja>>() {
-            @Override
-            public void accept(List<Pareja> ronda) {
-            }
+        return iniciar(ronda -> {
         });
     }
 

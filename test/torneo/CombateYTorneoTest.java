@@ -12,16 +12,15 @@ import acontecimientos.ResultadoCombateAcontecimiento;
 import combatientes.Combatiente;
 import combatientes.CreadorCombatientes;
 import combatientes.Escuela;
-import combatientes.tipos.HechiceroDelVacio;
-import combatientes.tipos.TipoCombatiente;
+import combatientes.HechiceroDelVacio;
+import combatientes.TipoCombatiente;
+import equipamiento.ArmaduraDorada;
 import equipamiento.CategoriaEquipamiento;
-import equipamiento.items.ArmaduraDorada;
-import equipamiento.items.EspadaCelestial;
-import equipamiento.items.SelloDelFenix;
-import torneo.*;
-import tecnicas.inmediatas.CorteDeLosMilAmaneceres;
-import tecnicas.inmediatas.MeditacionDelInmortal;
-import tecnicas.inmediatas.MuroDelCuerpoDorado;
+import equipamiento.EspadaCelestial;
+import equipamiento.SelloDelFenix;
+import tecnicas.CorteDeLosMilAmaneceres;
+import tecnicas.MeditacionDelInmortal;
+import tecnicas.MuroDelCuerpoDorado;
 import tecnicas.Tecnica;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -859,6 +858,9 @@ public class CombateYTorneoTest {
     }
 
     private int danioDe(AccionAcontecimiento accion) {
+        if (accion.danio() > 0) {
+            return accion.danio();
+        }
         Matcher matcher = Pattern.compile("Daño: (\\d+)").matcher(accion.detalle());
         return matcher.find() ? Integer.parseInt(matcher.group(1)) : 0;
     }

@@ -3,18 +3,19 @@ package combatientes;
 import acontecimientos.AccionAcontecimiento;
 import acontecimientos.EliminacionAcontecimiento;
 import acontecimientos.EmisorAcontecimientos;
-import combatientes.tipos.TipoCombatiente;
 import equipamiento.CategoriaEquipamiento;
 import equipamiento.Equipamiento;
 import equipamiento.ReglaEquipamientoException;
 import torneo.Pareja;
+import tecnicas.EfectoTemporal;
 import tecnicas.Tecnica;
 import tecnicas.TipoTecnica;
-import tecnicas.temporales.EfectoTemporal;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class Combatiente {
     public static final int VIDA_BASE_MAXIMA = 100;
@@ -28,29 +29,9 @@ public abstract class Combatiente {
     private int energiaActual;
 
     private final List<Equipamiento> equipamientos = new ArrayList<>();
-
-    private static class UsoTecnicaRestante {
-        private final Tecnica tecnica;
-        private int usos;
-
-        public UsoTecnicaRestante(Tecnica tecnica, int usos) {
-            this.tecnica = tecnica;
-            this.usos = usos;
-        }
-    }
-
-    private static class TecnicaActiva {
-        private final Tecnica tecnica;
-        private final int reduccionDanio;
-
-        public TecnicaActiva(Tecnica tecnica, int reduccionDanio) {
-            this.tecnica = tecnica;
-            this.reduccionDanio = reduccionDanio;
-        }
-    }
-
-    private final List<UsoTecnicaRestante> usosRestantes = new ArrayList<>();
-    private final List<TecnicaActiva> tecnicasActivas = new ArrayList<>();
+    private final Map<Tecnica, Integer> usosRestantes = new LinkedHashMap<>();
+    private final List<Tecnica> defensasActivas = new ArrayList<>();
+    private int reduccionDefensaActiva = 0;
     private final List<EfectoTemporal> efectosTemporales = new ArrayList<>();
 
     public Combatiente(int id, String nombre, Escuela escuela) {
@@ -72,7 +53,7 @@ public abstract class Combatiente {
         }
 
         for (Tecnica t : escuela.tecnicas()) {
-            this.usosRestantes.add(new UsoTecnicaRestante(t, 5));
+            this.usosRestantes.put(t, 5);
         }
 
         this.vidaActual = vidaMaxima();
@@ -123,7 +104,7 @@ public abstract class Combatiente {
         return Collections.unmodifiableList(equipamientos);
     }
 
-    public abstract TipoCombatiente tipo();
+    public abstract String tipo();
 
     public int calcularDanioAtaque(int danioBase) {
         return danioBase + bonoDanioEquipamiento();
@@ -143,7 +124,7 @@ public abstract class Combatiente {
 
     public void recibirDanio(int danioEntrante) {
         if (!estaEnPie()) return;
-        int danio = danioEntrante - bonoDefensaEquipamiento() - reduccionDefensaActiva();
+        int danio = danioEntrante - bonoDefensaEquipamiento() - reduccionDefensaActiva;
         this.vidaActual = Math.max(0, this.vidaActual - Math.max(0, danio));
     }
 
@@ -216,23 +197,14 @@ public abstract class Combatiente {
 
     public int usosRestantes(Tecnica tecnica) {
         if (tecnica == null) return 0;
-        for (UsoTecnicaRestante reg : usosRestantes) {
-            if (reg.tecnica.equals(tecnica)) {
-                return reg.usos;
-            }
-        }
-        return 0;
+        return usosRestantes.getOrDefault(tecnica, 0);
     }
 
     public void descontarUso(Tecnica tecnica) {
         if (tecnica == null) return;
-        for (UsoTecnicaRestante reg : usosRestantes) {
-            if (reg.tecnica.equals(tecnica)) {
-                if (reg.usos > 0) {
-                    reg.usos--;
-                }
-                break;
-            }
+        int actuales = usosRestantes(tecnica);
+        if (actuales > 0) {
+            usosRestantes.put(tecnica, actuales - 1);
         }
     }
 
@@ -245,33 +217,20 @@ public abstract class Combatiente {
 
     public void activarTecnica(Tecnica tecnica, int reduccionDanioRecibido) {
         if (tecnica != null) {
-            tecnicasActivas.add(new TecnicaActiva(tecnica, reduccionDanioRecibido));
+            defensasActivas.add(tecnica);
+            this.reduccionDefensaActiva += Math.max(0, reduccionDanioRecibido);
         }
     }
 
     public boolean tieneDefensaActiva() {
-        for (TecnicaActiva act : tecnicasActivas) {
-            if (act.tecnica.tipo() == TipoTecnica.DEFENSIVA) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private int reduccionDefensaActiva() {
-        int suma = 0;
-        for (TecnicaActiva act : tecnicasActivas) {
-            if (act.tecnica.tipo() == TipoTecnica.DEFENSIVA) {
-                suma += act.reduccionDanio;
-            }
-        }
-        return suma;
+        return !defensasActivas.isEmpty();
     }
 
     public void restablecerCombate() {
         this.vidaActual = vidaMaxima();
         this.energiaActual = energiaMaxima();
-        this.tecnicasActivas.clear();
+        this.defensasActivas.clear();
+        this.reduccionDefensaActiva = 0;
         this.efectosTemporales.clear();
     }
 
@@ -342,7 +301,7 @@ public abstract class Combatiente {
     }
 
     public String estado() {
-        return nombre + " #" + id + " [" + tipo().etiqueta() + "] (" + vidaActual + "/" + vidaMaxima() +
+        return nombre + " #" + id + " [" + tipo() + "] (" + vidaActual + "/" + vidaMaxima() +
                 " vida, " + energiaActual + "/" + energiaMaxima() + " energía)";
     }
 

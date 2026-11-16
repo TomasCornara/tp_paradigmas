@@ -1,22 +1,22 @@
 import acontecimientos.CronistaDeLaSecta;
-import acontecimientos.Heraldo;
+import acontecimientos.HeraldoImperial;
 import combatientes.Combatiente;
 import combatientes.CreadorCombatientes;
 import combatientes.Escuela;
-import combatientes.tipos.TipoCombatiente;
+import equipamiento.AnilloEspiritual;
+import equipamiento.ArmaduraDorada;
 import equipamiento.CategoriaEquipamiento;
+import equipamiento.EspadaCelestial;
 import equipamiento.ReglaEquipamientoException;
-import equipamiento.items.AnilloEspiritual;
-import equipamiento.items.ArmaduraDorada;
-import equipamiento.items.EspadaCelestial;
-import equipamiento.items.SelloDelFenix;
-import torneo.*;
-import tecnicas.inmediatas.CorteDeLosMilAmaneceres;
-import tecnicas.inmediatas.DominioDeLaNada;
-import tecnicas.inmediatas.GolpeVenenoso;
-import tecnicas.inmediatas.MeditacionDelInmortal;
-import tecnicas.inmediatas.MuroDelCuerpoDorado;
-import tecnicas.inmediatas.RegeneracionVital;
+import equipamiento.SelloDelFenix;
+import tecnicas.CorteDeLosMilAmaneceres;
+import tecnicas.DominioDeLaNada;
+import tecnicas.GolpeVenenoso;
+import tecnicas.MeditacionDelInmortal;
+import tecnicas.MuroDelCuerpoDorado;
+import tecnicas.RegeneracionVital;
+import torneo.Pareja;
+import torneo.Torneo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,18 +45,18 @@ public class Main {
         Escuela monasterio = new Escuela("Monasterio del Cuerpo Dorado", tecnicasMonasterio, itemsMonasterio);
 
         CreadorCombatientes creador = new CreadorCombatientes();
-        Combatiente aurelio = creador.crear(TipoCombatiente.CULTIVADOR_DE_LA_ESPADA, "Aurelio", escuelaDeLaEspada);
-        Combatiente nebula = creador.crear(TipoCombatiente.HECHICERO_DEL_VACIO, "Nébula", palacioDelVacio);
-        Combatiente kael = creador.crear(TipoCombatiente.MONJE_DEL_CUERPO_CELESTIAL, "Kael", palacioDelVacio);
-        Combatiente darian = creador.crear(TipoCombatiente.CULTIVADOR_DE_LA_ESPADA, "Darian", escuelaDeLaEspada);
+        Combatiente aurelio = creador.crear("Cultivador de la Espada", "Aurelio", escuelaDeLaEspada);
+        Combatiente nebula = creador.crear("Hechicero del Vacío", "Nébula", palacioDelVacio);
+        Combatiente kael = creador.crear("Monje del Cuerpo Celestial", "Kael", palacioDelVacio);
+        Combatiente darian = creador.crear("Cultivador de la Espada", "Darian", escuelaDeLaEspada);
 
-        Combatiente lin = creador.crear(TipoCombatiente.MONJE_DEL_CUERPO_CELESTIAL, "Lin", monasterio);
-        Combatiente bren = creador.crear(TipoCombatiente.HECHICERO_DEL_VACIO, "Bren", palacioDelVacio);
-        Combatiente thorin = creador.crear(TipoCombatiente.CULTIVADOR_DE_LA_ESPADA, "Thorin", escuelaDeLaEspada);
-        Combatiente zhen = creador.crear(TipoCombatiente.MONJE_DEL_CUERPO_CELESTIAL, "Zhen", monasterio);
+        Combatiente lin = creador.crear("Monje del Cuerpo Celestial", "Lin", monasterio);
+        Combatiente bren = creador.crear("Hechicero del Vacío", "Bren", palacioDelVacio);
+        Combatiente thorin = creador.crear("Cultivador de la Espada", "Thorin", escuelaDeLaEspada);
+        Combatiente zhen = creador.crear("Monje del Cuerpo Celestial", "Zhen", monasterio);
 
         Torneo torneo = new Torneo();
-        Heraldo heraldo = new Heraldo();
+        HeraldoImperial heraldo = new HeraldoImperial();
         CronistaDeLaSecta cronista = new CronistaDeLaSecta();
         torneo.agregarObservador(heraldo);
         torneo.agregarObservador(cronista);
@@ -71,7 +71,7 @@ public class Main {
         heraldo.presentarTablaPosiciones(cronista.obtenerTablaPosiciones());
     }
 
-    private static void ajustarEquipamiento(Heraldo heraldo, List<Pareja> clasifican,
+    private static void ajustarEquipamiento(HeraldoImperial heraldo, List<Pareja> clasifican,
                                             Combatiente aurelio, Combatiente darian, Combatiente nebula) {
         if (sigueEnCompetencia(aurelio, clasifican)) {
             try {

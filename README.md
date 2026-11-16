@@ -69,11 +69,11 @@ El proyecto implementa reglas de combate, límites de recursos (energía y usos 
   - Polimorfismo en las implementaciones de `Tecnica`, `Equipamiento` y `EfectoTemporal`.
 - **Encapsulamiento y Modelado Puro**:
   - Estado protegido y privado con validaciones en constructores y métodos de dominio.
-  - Modelado de relaciones mediante clases de dominio simples y colecciones estándar (`List`, `ArrayList`), sin dependencias de estructuras complejas innecesarias (`HashMap`).
+  - Elección de colecciones según la necesidad de la consigna (`List` para orden de rondas y turnos, `Set` para evitar duplicados de parejas y combatientes, `Map` para registrar usos de técnicas y seguimiento de reglas).
 - **Patrón Observer**:
   - `EmisorAcontecimientos` notifica eventos desacoplados (`Acontecimiento`) a observadores suscritos.
-  - `Heraldo` reporta la narrativa del combate en tiempo real.
-  - `CronistaDeLaSecta` almacena el histórico y computa las posiciones.
+  - `HeraldoImperial` reporta la narrativa del combate y presentación en tiempo real por pantalla.
+  - `CronistaDeLaSecta` almacena el histórico y computa las posiciones finales.
 - **Separación de Responsabilidades**:
   - Desacoplamiento total entre las reglas del torneo, la mecánica del combate por asaltos y la presentación en consola.
 

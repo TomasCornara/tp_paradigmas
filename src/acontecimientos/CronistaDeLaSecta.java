@@ -4,7 +4,9 @@ import torneo.Pareja;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CronistaDeLaSecta implements ObservadorAcontecimientos {
     private final List<Acontecimiento> historial = new ArrayList<>();
@@ -19,29 +21,20 @@ public class CronistaDeLaSecta implements ObservadorAcontecimientos {
         }
     }
 
-    private final List<InfoPareja> tablaParejas = new ArrayList<>();
+    private final Map<Pareja, InfoPareja> tablaParejas = new LinkedHashMap<>();
 
     private InfoPareja obtenerOCrear(Pareja pareja) {
-        for (InfoPareja info : tablaParejas) {
-            if (info.pareja.equals(pareja)) {
-                return info;
-            }
-        }
-        InfoPareja nuevo = new InfoPareja(pareja);
-        tablaParejas.add(nuevo);
-        return nuevo;
+        return tablaParejas.computeIfAbsent(pareja, InfoPareja::new);
     }
 
     @Override
     public void notificar(Acontecimiento acontecimiento) {
         historial.add(acontecimiento);
 
-        if (acontecimiento instanceof InicioCombateAcontecimiento) {
-            InicioCombateAcontecimiento inicio = (InicioCombateAcontecimiento) acontecimiento;
+        if (acontecimiento instanceof InicioCombateAcontecimiento inicio) {
             obtenerOCrear(inicio.pareja1()).ultimaRonda = inicio.ronda();
             obtenerOCrear(inicio.pareja2()).ultimaRonda = inicio.ronda();
-        } else if (acontecimiento instanceof ResultadoCombateAcontecimiento) {
-            ResultadoCombateAcontecimiento res = (ResultadoCombateAcontecimiento) acontecimiento;
+        } else if (acontecimiento instanceof ResultadoCombateAcontecimiento res) {
             InfoPareja g = obtenerOCrear(res.ganadora());
             g.ultimaRonda = res.ronda();
             g.vidaFinal = res.vidaTotalGanadora();
@@ -58,7 +51,7 @@ public class CronistaDeLaSecta implements ObservadorAcontecimientos {
 
     public List<EntradaTablaPosiciones> obtenerTablaPosiciones() {
         List<EntradaTablaPosiciones> tabla = new ArrayList<>();
-        for (InfoPareja info : tablaParejas) {
+        for (InfoPareja info : tablaParejas.values()) {
             tabla.add(new EntradaTablaPosiciones(info.pareja, info.ultimaRonda, info.vidaFinal));
         }
         Collections.sort(tabla);

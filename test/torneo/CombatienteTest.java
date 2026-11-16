@@ -1,13 +1,14 @@
 package torneo;
 
-import combatientes.*;
-import combatientes.tipos.CultivadorDeLaEspada;
-import combatientes.tipos.HechiceroDelVacio;
-import combatientes.tipos.MonjeDelCuerpoCelestial;
-import combatientes.tipos.TipoCombatiente;
-import torneo.*;
+import combatientes.Combatiente;
+import combatientes.CreadorCombatientes;
+import combatientes.CultivadorDeLaEspada;
+import combatientes.Escuela;
+import combatientes.HechiceroDelVacio;
+import combatientes.MonjeDelCuerpoCelestial;
+import combatientes.TipoCombatiente;
 import tecnicas.ContextoEjecucion;
-import tecnicas.inmediatas.CorteDeLosMilAmaneceres;
+import tecnicas.CorteDeLosMilAmaneceres;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -62,5 +63,21 @@ public class CombatienteTest {
         assertInstanceOf(CultivadorDeLaEspada.class, c1);
         assertInstanceOf(MonjeDelCuerpoCelestial.class, c2);
         assertInstanceOf(HechiceroDelVacio.class, c3);
+    }
+
+    @Test
+    @DisplayName("Consigna: creación centralizada mediante String de tipo")
+    void creadorPermiteCrearPorNombreDeTipoSegunConsigna() {
+        CreadorCombatientes c = new CreadorCombatientes(10);
+        Combatiente a = c.crear("Cultivador de la Espada", "Aurelio", escuelaVacia);
+        Combatiente b = c.crear("Hechicero del Vacío", "Nébula", escuelaVacia);
+        Combatiente m = c.crear("Monje del Cuerpo Celestial", "Kael", escuelaVacia);
+
+        assertEquals(10, a.id());
+        assertEquals("Cultivador de la Espada", a.tipo());
+        assertEquals(11, b.id());
+        assertEquals("Hechicero del Vacío", b.tipo());
+        assertEquals(12, m.id());
+        assertEquals("Monje del Cuerpo Celestial", m.tipo());
     }
 }

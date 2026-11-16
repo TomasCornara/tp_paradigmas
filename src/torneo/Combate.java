@@ -8,7 +8,6 @@ import tecnicas.TipoTecnica;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 public final class Combate {
     public static final int ENERGIA_POR_ASALTO = 10;
@@ -129,10 +128,13 @@ public final class Combate {
             int deltaVida = Math.abs(afectado.vidaActual() - vidaAntes);
 
             String detalle = "Costo: " + costo + " ener, Usos restantes: " + ejecutor.usosRestantes(tecnica);
+            int danioProvocado = tecnica.tipo() == TipoTecnica.OFENSIVA ? deltaVida : 0;
+            int curacionProvocada = tecnica.tipo() == TipoTecnica.RECUPERACION ? deltaVida : 0;
             if (deltaVida > 0) {
                 detalle += (tecnica.tipo() == TipoTecnica.OFENSIVA ? ", Daño: " : ", Curación: ") + deltaVida;
             }
-            emisor.notificar(new AccionAcontecimiento(ejecutor, tecnica.nombre(), afectado, detalle));
+            emisor.notificar(new AccionAcontecimiento(ejecutor, tecnica.nombre(), afectado, detalle,
+                    danioProvocado, curacionProvocada, costo));
 
             if (!afectado.estaEnPie()) {
                 emisor.notificar(new EliminacionAcontecimiento(afectado));
@@ -149,7 +151,10 @@ public final class Combate {
                         ejecutor,
                         "Ataque básico",
                         objetivo,
-                        "Daño: " + danioReal
+                        "Daño: " + danioReal,
+                        danioReal,
+                        0,
+                        0
                 ));
 
                 if (!objetivo.estaEnPie()) {

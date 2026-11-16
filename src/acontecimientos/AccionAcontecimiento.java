@@ -7,12 +7,23 @@ public class AccionAcontecimiento implements Acontecimiento {
     private final String accion;
     private final Combatiente objetivo;
     private final String detalle;
+    private final int danio;
+    private final int curacion;
+    private final int costoEnergia;
 
     public AccionAcontecimiento(Combatiente ejecutor, String accion, Combatiente objetivo, String detalle) {
+        this(ejecutor, accion, objetivo, detalle, 0, 0, 0);
+    }
+
+    public AccionAcontecimiento(Combatiente ejecutor, String accion, Combatiente objetivo, String detalle,
+                               int danio, int curacion, int costoEnergia) {
         this.ejecutor = ejecutor;
         this.accion = accion;
         this.objetivo = objetivo;
         this.detalle = detalle;
+        this.danio = danio;
+        this.curacion = curacion;
+        this.costoEnergia = costoEnergia;
     }
 
     public Combatiente ejecutor() {
@@ -29,6 +40,18 @@ public class AccionAcontecimiento implements Acontecimiento {
 
     public String detalle() {
         return detalle;
+    }
+
+    public int danio() {
+        return danio;
+    }
+
+    public int curacion() {
+        return curacion;
+    }
+
+    public int costoEnergia() {
+        return costoEnergia;
     }
 
     @Override
