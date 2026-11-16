@@ -1,4 +1,4 @@
-# Torneo de Cultivadores por Parejas - Paradigmas de Programación
+# Torneo de los Inmortales - Paradigmas de Programación
 
 Simulador de torneo de artes marciales y cultivación basado en combates por parejas por eliminación directa, desarrollado bajo los principios de la Programación Orientada a Objetos (POO) en Java.
 
