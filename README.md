@@ -4,7 +4,7 @@ Simulador de torneo de artes marciales y cultivación basado en combates por par
 
 ---
 
-## 📋 Descripción General
+## Descripción General
 
 El sistema modela un torneo donde diversas **Escuelas** inscriben a sus **Combatientes** organizados en **Parejas** de dos integrantes. Los enfrentamientos se desarrollan por rondas de eliminación directa en combates por asaltos por turnos. 
 
